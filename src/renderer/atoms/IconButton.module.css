@@ -1,0 +1,8 @@
+.root {
+  display: flex;
+  align-items: center;
+}
+
+.root > :not(:first-child) {
+  margin-left: 4px;
+}

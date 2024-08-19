@@ -1,0 +1,21 @@
+.panel {
+  background-color: rgb(39, 53, 15);
+  border: 3px groove rgb(96, 167, 96);
+  color: rgb(96, 167, 96);
+}
+
+.link {
+  color: rgb(52, 92, 52);
+}
+
+/* .link:hover {
+  color: rgb(137, 216, 137);
+} */
+
+.link:active {
+  color: rgb(137, 216, 137);
+}
+
+.link-checked {
+  color: rgb(137, 216, 137);
+}
