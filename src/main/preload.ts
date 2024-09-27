@@ -7,10 +7,12 @@ interface Incoming {
   readonly save: readonly [filePath: string];
   readonly undo: readonly [];
   readonly redo: readonly [];
+  readonly export: readonly [filePath: string];
 }
 
 interface Outgoing {
   readonly save: readonly [filePath: string, data: ArrayBuffer];
+  readonly export: readonly [filePath: string, data: ArrayBuffer];
   readonly setUndoContext: readonly [canUndo: boolean, canRedo: boolean, undoAction?: string, redoAction?: string];
 }
 
@@ -44,6 +46,9 @@ const electronHandler = {
   onOpen: receive('open'),
   onSave: (handler: (filePath: string) => Promise<ArrayBuffer>) => {
     return receive('save')((filePath) => handler(filePath).then(data => send('save')(filePath, data)));
+  },
+  onExport: (handler: (filePath: string) => Promise<ArrayBuffer>) => {
+    return receive('export')((filePath) => handler(filePath).then(data => send('export')(filePath, data)));
   },
   onUndo: receive('undo'),
   onRedo: receive('redo'),

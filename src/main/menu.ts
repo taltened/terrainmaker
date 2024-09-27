@@ -13,8 +13,9 @@ interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
 
 export interface MenuHandler {
   readonly createFileWindow: () => void;
-  readonly saveFileWindow: (window: BrowserWindow) => void;
   readonly openFileWindow: (window: BrowserWindow) => void;
+  readonly saveFileWindow: (window: BrowserWindow) => void;
+  readonly exportFileWindow: (window: BrowserWindow) => void;
 }
 
 export default class MenuBuilder {
@@ -119,6 +120,17 @@ export default class MenuBuilder {
           click: (_, window) => {
             if (window) {
               this.handler.saveFileWindow(window);
+            }
+          },
+        },
+        { type: 'separator' },
+        {
+          label: 'Export',
+          accelerator: 'Command+E',
+          selector: 'export:',
+          click: (_, window) => {
+            if (window) {
+              this.handler.exportFileWindow(window);
             }
           },
         },

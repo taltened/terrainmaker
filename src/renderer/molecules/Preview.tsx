@@ -81,5 +81,5 @@ export function Preview({ grid: gridProps, overlay: overlayProps }: PreviewProps
     });
   }, [grid, gridProps, overlay, sxy, exy, layers, content]);
 
-  return <Canvas draw={draw} width={width} height={height} onMouseDown={onDown} onMouseUp={onUp} onMouseMove={sxy && onMove} />;
+  return <Canvas draw={draw} width={width} height={height} onMouseDown={onDown} onMouseUp={onUp} onMouseMove={sxy && onMove} onExport={window.electron.onExport} />;
 }

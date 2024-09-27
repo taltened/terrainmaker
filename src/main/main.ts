@@ -35,6 +35,10 @@ ipcMain.on('save', (_, filePath: string, data: ArrayBuffer) => {
   writeFile(filePath, new DataView(data)).then(console.log).catch(console.log);
 });
 
+ipcMain.on('export', (_, filePath: string, data: ArrayBuffer) => {
+  writeFile(filePath, new DataView(data)).then(console.log).catch(console.log);
+});
+
 ipcMain.on('setUndoContext', (_, canUndo: boolean, canRedo: boolean, undoAction?: string, redoAction?: string) => {
   const menu = Menu.getApplicationMenu()
   const undoItem = menu?.getMenuItemById('undo');
@@ -159,6 +163,17 @@ app
   .then(() => {
     const menuBuilder = new MenuBuilder({
       createFileWindow,
+      openFileWindow: (window) => {
+        dialog.showOpenDialog(window).then(({ filePaths }) => {
+          if (filePaths.length) {
+            return (
+              readFile(filePaths[0])
+              .then(data => data.buffer)
+              .then(data => file.open(window, filePaths[0], data))
+            );
+          }
+        }).catch(console.log);
+      },
       saveFileWindow: (window) => {
         if (window.representedFilename) {
           // Save
@@ -172,17 +187,21 @@ app
           }).catch(console.log);
         }
       },
-      openFileWindow: (window) => {
-        dialog.showOpenDialog(window).then(({ filePaths }) => {
-          if (filePaths.length) {
-            return (
-              readFile(filePaths[0])
-              .then(data => data.buffer)
-              .then(data => file.open(window, filePaths[0], data))
-            );
+      exportFileWindow: (window) => {
+        // Export as
+        dialog.showSaveDialog(window, {
+          defaultPath: window.representedFilename + '.png',
+          buttonLabel: 'Export',
+          filters: [{
+            name: 'Portable Network Graphics',
+            extensions: ['png'],
+          }]
+        }).then(({ filePath }) => {
+          if (filePath) {
+            file.export(window, filePath);
           }
         }).catch(console.log);
-      }
+      },
     });
     menuBuilder.buildMenu();
 
